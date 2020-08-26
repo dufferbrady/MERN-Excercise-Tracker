@@ -1,0 +1,50 @@
+.container {
+  min-height: 400px;
+  min-width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.top_bar {
+  width: 100%;
+  min-height: 100px;
+  background: #ffffff;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  box-sizing: border-box;
+}
+
+.bottom_bar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.bottom_left {
+  min-height: 275px;
+  background: #ffffff;
+  border-radius: 5px;
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.bottom_center {
+  min-height: 275px;
+  background: #ffffff;
+  border-radius: 5px;
+  flex-grow: 1;
+  margin: 0 10px;
+}
+
+.bottom_right {
+  min-height: 275px;
+  background: #ffffff;
+  border-radius: 5px;
+  flex-grow: 1;
+  margin-left: 10px;
+}
