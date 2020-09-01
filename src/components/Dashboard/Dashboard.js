@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import classes from "./Dashboard.module.css";
+
+import { GlobalContext } from "../../context/GlobalState";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 function Dashboard() {
+  const { workouts } = useContext(GlobalContext);
+
+  //   console.log(workouts.map((workout) => workout.date));
+
   return (
     <div className={classes.container}>
       <div className={classes.top_bar}>
@@ -32,13 +38,32 @@ function Dashboard() {
           />
           <span className={classes.dashboard_welcome}>Andy Brady</span>
           <button
-            style={{ width: "75%", "margin-top": "25px" }}
+            style={{
+              width: "75%",
+              marginTop: "25px",
+              background: "#00adb5",
+              color: "white",
+              textTransform: "uppercase",
+              letterSpacing: "1.5px",
+              fontWeight: "500",
+            }}
             className={classes.dashboard_button}
           >
             Edit Profile
           </button>
         </div>
-        <div className={classes.bottom_center}>recent workouts</div>
+        <div className={classes.bottom_center}>
+          <ul>
+            {workouts.map((workout, i) => (
+              <div key={i}>
+                <li>
+                  {workout.name}
+                  {workout.date}
+                </li>
+              </div>
+            ))}
+          </ul>
+        </div>
         <div className={classes.bottom_right}>graph slides</div>
       </div>
     </div>
