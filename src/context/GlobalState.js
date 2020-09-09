@@ -4,9 +4,9 @@ import AppReducer from "./AppReducer";
 // Initial state
 const initialState = {
   workouts: [
-    { name: "Workout A", date: "Tue, 25 Aug" },
-    { name: "Workout B", date: "Thur, 27 Aug" },
-    { name: "Workout A", date: "Sat, 29 Aug" },
+    { name: "Workout A", date: "Tue, 25 Aug", _id: "1234" },
+    { name: "Workout B", date: "Thur, 27 Aug", _id: "1234" },
+    { name: "Workout A", date: "Sat, 29 Aug", _id: "1234" },
   ],
 };
 

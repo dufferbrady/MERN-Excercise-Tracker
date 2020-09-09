@@ -53,10 +53,13 @@ function Dashboard() {
           </button>
         </div>
         <div className={classes.bottom_center}>
-          <ul>
+          <div className={classes.transactionHistory_header}>
+            Workout History
+          </div>
+          <ul className={classes.transactionHistory_list}>
             {workouts.map((workout, i) => (
-              <div key={i}>
-                <li>
+              <div key={`${i}_${workout._id}`} className={classes.list}>
+                <li className={classes.transactionHistory_listItem}>
                   {workout.name}
                   {workout.date}
                 </li>
