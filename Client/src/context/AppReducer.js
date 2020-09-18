@@ -1,16 +1,9 @@
 export default (state, action) => {
   switch (action.type) {
-    case "DELETE_TRANSACTION":
+    case "SHOW_MODAL":
       return {
         ...state,
-        transactions: state.transactions.filter(
-          (transaction) => transaction.id !== action.payload
-        ),
-      };
-    case "ADD_TRANSACTION":
-      return {
-        ...state,
-        transactions: [action.payload, ...state.transactions],
+        registerModal: action.payload,
       };
     default:
       return state;

@@ -8,3 +8,36 @@
   align-items: center;
   font-family: "Raleway", sans-serif;
 }
+
+.modal_container {
+  position: fixed;
+  /* top: 50vh;
+  left: 50vw; */
+  z-index: 500;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 1px black;
+  padding: 20px;
+  /* top: 30%;  */
+  box-sizing: border-box;
+  transition: all 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 25vw;
+}
+
+.modal_container_null {
+  display: none;
+}
+
+.Backdrop {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}

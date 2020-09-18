@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import classes from "./login.module.css";
 import Input from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
+import Modal from "../UI/Modal/Modal";
+import Register from "../Register/Register";
+
+import { GlobalContext } from "../../context/GlobalState";
 
 const Login = () => {
-  return (
+  const { registerModal, showModal } = useContext(GlobalContext);
+
+  const login = (
     <div className={classes.login_container}>
       <div className={classes.recent_logins}>Recent Logins</div>
       <div className={classes.login_form}>
@@ -16,11 +22,11 @@ const Login = () => {
             styles={{
               width: "100%",
               padding: "15px 20px",
-              "box-sizing": "border-box",
+              boxSizing: "border-box",
               margin: "15px 0 5px 0",
-              "border-radius": "10px",
+              borderRadius: "10px",
               border: "1px solid #DDDFE2",
-              "font-size": "15px",
+              fontSize: "15px",
             }}
           />
           <Input
@@ -29,11 +35,11 @@ const Login = () => {
             styles={{
               width: "100%",
               padding: "15px 20px",
-              "box-sizing": "border-box",
+              boxSizing: "border-box",
               margin: "5px 0",
-              "border-radius": "10px",
+              borderRadius: "10px",
               border: "1px solid #DDDFE2",
-              "font-size": "15px",
+              fontSize: "15px",
             }}
           />
           <Button
@@ -41,15 +47,15 @@ const Login = () => {
             styles={{
               width: "100%",
               padding: "15px 20px",
-              "box-sizing": "border-box",
+              boxSizing: "border-box",
               margin: "5px 0",
-              "border-radius": "10px",
+              borderRadius: "10px",
               border: "1px solid #DDDFE2",
-              "font-size": "15px",
+              fontSize: "15px",
               background: "#002524",
               color: "white",
-              "letter-spacing": "1px",
-              "font-weight": "600",
+              letterSpacing: "1px",
+              fontWeight: "600",
             }}
           />
         </div>
@@ -58,24 +64,33 @@ const Login = () => {
         </div>
         <div className={classes.create_account}>
           <Button
+            clickFunction={() => showModal(true)}
             text="Create Account"
             styles={{
               width: "100%",
               padding: "15px 20px",
-              "box-sizing": "border-box",
+              boxSizing: "border-box",
               margin: "5px 0",
-              "border-radius": "10px",
+              borderRadius: "10px",
               border: "1px solid #DDDFE2",
-              "font-size": "15px",
+              fontSize: "15px",
               background: "#00a8a3",
               color: "white",
-              "letter-spacing": "1px",
-              "font-weight": "600",
+              letterSpacing: "1px",
+              fontWeight: "600",
             }}
           />
         </div>
       </div>
     </div>
+  );
+  return (
+    <>
+      {login}
+      <Modal cancelModal={() => showModal(false)} show={registerModal}>
+        <Register />
+      </Modal>
+    </>
   );
 };
 

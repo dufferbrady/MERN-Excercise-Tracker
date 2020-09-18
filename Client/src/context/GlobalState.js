@@ -8,6 +8,7 @@ const initialState = {
     { name: "Workout B", date: "Thur, 27 Aug", _id: "1234" },
     { name: "Workout A", date: "Sat, 29 Aug", _id: "1234" },
   ],
+  registerModal: false,
 };
 
 // Create context
@@ -25,10 +26,20 @@ export const GlobalProvider = ({ children }) => {
   //     });
   //   }
 
+  //Actions
+  function showModal(val) {
+    dispatch({
+      type: "SHOW_MODAL",
+      payload: val,
+    });
+  }
+
   return (
     <GlobalContext.Provider
       value={{
         workouts: state.workouts,
+        registerModal: state.registerModal,
+        showModal,
       }}
     >
       {children}

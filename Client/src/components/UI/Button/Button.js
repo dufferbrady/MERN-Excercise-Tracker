@@ -1,9 +1,11 @@
 import React from "react";
 
-const Button = ({ text, styles }) => {
+const Button = ({ text, styles, clickFunction }) => {
   return (
     <div>
-      <button style={{ ...styles }}>{text}</button>
+      <button onClick={clickFunction} style={{ ...styles }}>
+        {text}
+      </button>
     </div>
   );
 };
