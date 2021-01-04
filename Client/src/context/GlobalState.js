@@ -1,5 +1,7 @@
 import React, { createContext, useReducer } from "react";
+
 import AppReducer from "./AppReducer";
+import axios from "axios";
 
 // Initial state
 const initialState = {
@@ -9,6 +11,8 @@ const initialState = {
     { name: "Workout A", date: "Sat, 29 Aug", _id: "1234" },
   ],
   registerModal: false,
+  userRegisterVal: false,
+  loadingUser: false,
 };
 
 // Create context
@@ -19,17 +23,53 @@ export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
   // Actions
-  //   function deleteTransaction(id) {
-  //     dispatch({
-  //       type: 'DELETE_TRANSACTION',
-  //       payload: id
-  //     });
-  //   }
+  async function addUser(newUser) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      let res = await axios.post(
+        "http://localhost:5001/users/register",
+        newUser,
+        config
+      );
+      let data = res.data;
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   //Actions
-  function showModal(val) {
+  function showRegisterModal(val) {
     dispatch({
-      type: "SHOW_MODAL",
+      type: "SHOW_REGISTER_MODAL",
+      payload: val,
+    });
+  }
+
+  //Actions
+  function showUserValModal(val) {
+    dispatch({
+      type: "SHOW_USERVAL_MODAL",
+      payload: val,
+    });
+  }
+
+  //Actions
+  function registerUser(val) {
+    dispatch({
+      type: "USER_VALIDATED",
+      payload: val,
+    });
+  }
+
+  //Actions
+  function startLoader(val) {
+    dispatch({
+      type: "START_LOADER",
       payload: val,
     });
   }
@@ -39,7 +79,13 @@ export const GlobalProvider = ({ children }) => {
       value={{
         workouts: state.workouts,
         registerModal: state.registerModal,
-        showModal,
+        userRegisterVal: state.userRegisterVal,
+        loadingUser: state.loadingUser,
+        showRegisterModal,
+        showUserValModal,
+        registerUser,
+        addUser,
+        startLoader,
       }}
     >
       {children}

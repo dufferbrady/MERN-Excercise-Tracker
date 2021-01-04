@@ -9,7 +9,12 @@ import Register from "../Register/Register";
 import { GlobalContext } from "../../context/GlobalState";
 
 const Login = () => {
-  const { registerModal, showModal } = useContext(GlobalContext);
+  const {
+    registerModal,
+    showRegisterModal,
+    userRegisterVal,
+    showUserValModal,
+  } = useContext(GlobalContext);
 
   const login = (
     <div className={classes.login_container}>
@@ -64,7 +69,7 @@ const Login = () => {
         </div>
         <div className={classes.create_account}>
           <Button
-            clickFunction={() => showModal(true)}
+            clickFunction={() => showRegisterModal(true)}
             text="Create Account"
             styles={{
               width: "100%",
@@ -87,8 +92,11 @@ const Login = () => {
   return (
     <>
       {login}
-      <Modal cancelModal={() => showModal(false)} show={registerModal}>
+      <Modal cancelModal={() => showRegisterModal(false)} show={registerModal}>
         <Register />
+      </Modal>
+      <Modal cancelModal={() => showUserValModal(false)} show={userRegisterVal}>
+        {`User has been sucessfully added`}
       </Modal>
     </>
   );

@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/", home);
 app.use("/users", users);
 
-const PORT = process.env.port || 5000;
+const PORT = process.env.port || 5001;
 
 app.listen(
   PORT,
