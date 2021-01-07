@@ -16,6 +16,7 @@ const keys = process.env.SECRET_OR_KEY;
 exports.registerUser = async (req, res) => {
   // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
+  console.log(errors, isValid);
 
   // Check validation
   if (!isValid) {
@@ -39,7 +40,10 @@ exports.registerUser = async (req, res) => {
           newUser.password = hash;
           newUser
             .save()
-            .then((user) => res.json(user))
+            .then((user) => {
+              console.log(user);
+              res.json(user);
+            })
             .catch((err) => console.log(err));
         });
       });

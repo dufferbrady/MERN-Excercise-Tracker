@@ -15,3 +15,17 @@
   flex-direction: column;
   width: 100%;
 }
+
+.valid {
+  flex-grow: 1;
+  padding: 15px 20px;
+  box-sizing: border-box;
+  margin: 15px 0px 5px 0;
+  border-radius: 10px;
+  border: 1px solid #dddfe2;
+  font-size: 15px;
+}
+
+.invalid {
+  border: 1px solid red;
+}

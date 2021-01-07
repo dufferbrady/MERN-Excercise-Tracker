@@ -1,18 +1,18 @@
 import React, { createContext, useReducer } from "react";
 
+import jwt_decode from "jwt-decode";
+
 import AppReducer from "./AppReducer";
 import axios from "axios";
 
 // Initial state
 const initialState = {
-  workouts: [
-    { name: "Workout A", date: "Tue, 25 Aug", _id: "1234" },
-    { name: "Workout B", date: "Thur, 27 Aug", _id: "1234" },
-    { name: "Workout A", date: "Sat, 29 Aug", _id: "1234" },
-  ],
+  errMsgs: {},
+  isAuthenticated: false,
+  user: {},
+  loadingUser: false,
   registerModal: false,
   userRegisterVal: false,
-  loadingUser: false,
 };
 
 // Create context
@@ -22,24 +22,58 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  // Actions
-  async function addUser(newUser) {
+  const setAuthToken = async (token) => {
+    if (token) {
+      // Apply authorization token to every request if logged in
+      axios.defaults.headers.common["Authorization"] = token;
+    } else {
+      // Delete auth header
+      delete axios.defaults.headers.common["Authorization"];
+    }
+  };
+
+  // Register User
+  async function registerUser(userData) {
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
     try {
-      let res = await axios.post(
+      await axios.post(
         "http://localhost:5001/users/register",
-        newUser,
+        userData,
         config
       );
-      let data = res.data;
-      return data;
-    } catch (error) {
-      console.log(error);
+      showRegisterModal(false);
+    } catch (err) {
+      console.log("inside catch");
+      dispatch({
+        type: "GET_ERRORS",
+        payload: err.response.data,
+      });
     }
+  }
+
+  // Actions
+  async function addUser(newUser) {
+    console.log(newUser);
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // };
+    // try {
+    //   let res = await axios.post(
+    //     "http://localhost:5001/users/register",
+    //     newUser,
+    //     config
+    //   );
+    //   let data = res.data;
+    //   return data;
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   //Actions
@@ -59,12 +93,12 @@ export const GlobalProvider = ({ children }) => {
   }
 
   //Actions
-  function registerUser(val) {
-    dispatch({
-      type: "USER_VALIDATED",
-      payload: val,
-    });
-  }
+  // function registerUser(val) {
+  //   dispatch({
+  //     type: "USER_VALIDATED",
+  //     payload: val,
+  //   });
+  // }
 
   //Actions
   function startLoader(val) {
@@ -77,7 +111,9 @@ export const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        workouts: state.workouts,
+        errMsgs: state.errMsgs,
+        isAuthenticated: state.isAuthenticated,
+        user: state.user,
         registerModal: state.registerModal,
         userRegisterVal: state.userRegisterVal,
         loadingUser: state.loadingUser,

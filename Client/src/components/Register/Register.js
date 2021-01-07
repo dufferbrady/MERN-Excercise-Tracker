@@ -1,5 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 
+import classnames from "classnames";
 import Input from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
 import Loader from "../UI/Loader/Loader";
@@ -9,48 +11,52 @@ import classes from "./Register.module.css";
 import { GlobalContext } from "../../context/GlobalState";
 
 function Register() {
-  const {
-    addUser,
-    userRegisterVal,
-    registerUser,
-    loadingUser,
-    startLoader,
-  } = useContext(GlobalContext);
+  const { registerUser, errMsgs } = useContext(GlobalContext);
 
   const [firstName, setFirstName] = useState("");
-  const [surname, setSurname] = useState("");
+  const [surName, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  const [errors, setErrors] = useState(errMsgs);
+
+  useEffect(() => {
+    setErrors(errMsgs);
+  }, [errMsgs]);
 
   const submitNewUserHandle = (e) => {
     e.preventDefault();
 
-    let name = `${firstName} ${surname}`;
+    let fullName = `${firstName} ${surName}`;
     let newUser = {
-      name,
+      firstName,
+      surName,
+      fullName,
       email,
       password: password1,
-      password1,
       password2,
     };
 
-    // setFirstName("");
-    // setSurname("");
-    // setEmail("");
-    // setPassword1("");
-    // setPassword2("");
+    registerUser(newUser);
+    if (!errMsgs) {
+      setFirstName("");
+      setSurname("");
+      setEmail("");
+      setPassword1("");
+      setPassword2("");
+    }
+
     // showModal(false);
 
-    addUser(newUser)
-      .then((data) => {
-        console.log(data);
-        setTimeout(() => registerUser(data.success), 2000);
-        startLoader(data.success);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // addUser(newUser)
+    //   .then((data) => {
+    //     console.log(data);
+    //     setTimeout(() => registerUser(data.success), 2000);
+    //     startLoader(data.success);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
     // console.log(newUser);
   };
 
@@ -61,53 +67,55 @@ function Register() {
         <span style={{ fontSize: "20px" }}>It's quick and easy</span>
       </div>
       <div className={classes.namesBlock}>
+        <div>
+          <span style={{ color: "red" }}>{errMsgs.firstName}</span>
+          <Input
+            text="text"
+            placeholder="First Name"
+            value={firstName}
+            change={(e) => setFirstName(e.target.value)}
+            className={classes.valid}
+          />
+        </div>
+        <div>
+          <span style={{ color: "red" }}>{errMsgs.surName}</span>
+          <Input
+            text="text"
+            placeholder="Surname"
+            value={surName}
+            change={(e) => setSurname(e.target.value)}
+            styles={{
+              flexGrow: 1,
+              padding: "15px 20px",
+              boxSizing: "border-box",
+              margin: "15px 0 5px 10px",
+              borderRadius: "10px",
+              border: "1px solid #DDDFE2",
+              fontSize: "15px",
+            }}
+          />
+        </div>
+      </div>
+      <div>
+        <span style={{ color: "red" }}>{errMsgs.email}</span>
         <Input
           text="text"
-          placeholder="First Name"
-          value={firstName}
-          change={(e) => setFirstName(e.target.value)}
+          placeholder="Email address"
+          value={email}
+          change={(e) => setEmail(e.target.value)}
           styles={{
-            flexGrow: 1,
+            width: "100%",
             padding: "15px 20px",
             boxSizing: "border-box",
-            margin: "15px 0px 5px 0",
+            margin: "15px 0 5px 0",
             borderRadius: "10px",
             border: "1px solid #DDDFE2",
             fontSize: "15px",
-          }}
-        />
-        <Input
-          text="text"
-          placeholder="Surname"
-          value={surname}
-          change={(e) => setSurname(e.target.value)}
-          styles={{
             flexGrow: 1,
-            padding: "15px 20px",
-            boxSizing: "border-box",
-            margin: "15px 0 5px 10px",
-            borderRadius: "10px",
-            border: "1px solid #DDDFE2",
-            fontSize: "15px",
           }}
         />
       </div>
-      <Input
-        text="text"
-        placeholder="Email address"
-        value={email}
-        change={(e) => setEmail(e.target.value)}
-        styles={{
-          width: "100%",
-          padding: "15px 20px",
-          boxSizing: "border-box",
-          margin: "15px 0 5px 0",
-          borderRadius: "10px",
-          border: "1px solid #DDDFE2",
-          fontSize: "15px",
-          flexGrow: 1,
-        }}
-      />
+      <span style={{ color: "red" }}>{errMsgs.password}</span>
       <Input
         text="text"
         placeholder="Password"
@@ -123,6 +131,7 @@ function Register() {
           fontSize: "15px",
         }}
       />
+      <span style={{ color: "red" }}>{errMsgs.password2}</span>
       <Input
         text="text"
         placeholder="Confirm Password"
@@ -139,21 +148,7 @@ function Register() {
         }}
       />
       <Button
-        text={
-          loadingUser ? (
-            <Loader
-              style={{
-                height: "20px",
-                width: "20px",
-                borderWidth: "7.5px",
-                borderLeftColor: "white",
-                margin: "0 auto",
-              }}
-            />
-          ) : (
-            "Signup"
-          )
-        }
+        text={"Signup"}
         styles={{
           width: "100%",
           padding: "15px 20px",
@@ -172,4 +167,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default withRouter(Register);

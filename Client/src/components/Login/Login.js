@@ -95,9 +95,9 @@ const Login = () => {
       <Modal cancelModal={() => showRegisterModal(false)} show={registerModal}>
         <Register />
       </Modal>
-      <Modal cancelModal={() => showUserValModal(false)} show={userRegisterVal}>
+      {/* <Modal cancelModal={() => showUserValModal(false)} show={userRegisterVal}>
         {`User has been sucessfully added`}
-      </Modal>
+      </Modal> */}
     </>
   );
 };
