@@ -10,7 +10,7 @@ import Register from "../Register/Register";
 import { GlobalContext } from "../../context/GlobalState";
 
 function Login() {
-  const { registerModal, showRegisterModal, loginUser } = useContext(
+  const { registerModal, showRegisterModal, loginUser, errMsgs } = useContext(
     GlobalContext
   );
 
@@ -21,12 +21,41 @@ function Login() {
 
   const loginUserHandle = (e) => {
     e.preventDefault();
-    console.log("submitted");
     let userData = {
       email,
       password,
     };
-    loginUser(userData, history);
+    loginUser(userData, history).then((res) => {
+      console.log(res);
+      try {
+        if (res.status === 200) {
+          setEmail("");
+          setPassword("");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
+  const validStyle = {
+    width: "100%",
+    padding: "15px 20px",
+    boxSizing: "border-box",
+    margin: "15px 0 5px 0",
+    borderRadius: "10px",
+    border: "1px solid #DDDFE2",
+    fontSize: "15px",
+  };
+
+  const inValidStyle = {
+    width: "100%",
+    padding: "15px 20px",
+    boxSizing: "border-box",
+    margin: "15px 0 5px 0",
+    borderRadius: "10px",
+    border: "1px solid red",
+    fontSize: "15px",
   };
 
   const login = (
@@ -34,33 +63,21 @@ function Login() {
       <div className={classes.recent_logins}>Recent Logins</div>
       <div className={classes.login_form}>
         <form className={classes.input_container} onSubmit={loginUserHandle}>
+          <span style={{ color: "red" }}>{errMsgs.email}</span>
+          <span style={{ color: "red" }}>{errMsgs.emailnotfound}</span>
           <Input
             change={(e) => setEmail(e.target.value)}
             text="text"
             placeholder="Enter email address or username"
-            styles={{
-              width: "100%",
-              padding: "15px 20px",
-              boxSizing: "border-box",
-              margin: "15px 0 5px 0",
-              borderRadius: "10px",
-              border: "1px solid #DDDFE2",
-              fontSize: "15px",
-            }}
+            styles={!errMsgs.email ? validStyle : inValidStyle}
           />
+          <span style={{ color: "red" }}>{errMsgs.password}</span>
+          <span style={{ color: "red" }}>{errMsgs.passwordincorrect}</span>
           <Input
             change={(e) => setPassword(e.target.value)}
             text="text"
             placeholder="Password"
-            styles={{
-              width: "100%",
-              padding: "15px 20px",
-              boxSizing: "border-box",
-              margin: "5px 0",
-              borderRadius: "10px",
-              border: "1px solid #DDDFE2",
-              fontSize: "15px",
-            }}
+            styles={!errMsgs.password ? validStyle : inValidStyle}
           />
           <Button
             clickFunction={loginUserHandle}

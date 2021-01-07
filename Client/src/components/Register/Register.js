@@ -18,11 +18,11 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
-  const [errors, setErrors] = useState(errMsgs);
+  // const [errors, setErrors] = useState(errMsgs);
 
-  useEffect(() => {
-    setErrors(errMsgs);
-  }, [errMsgs]);
+  // useEffect(() => {
+  //   setErrors(errMsgs);
+  // }, [errMsgs]);
 
   const submitNewUserHandle = (e) => {
     e.preventDefault();
@@ -45,7 +45,6 @@ function Register() {
           setEmail("");
           setPassword1("");
           setPassword2("");
-          setErrors(null);
         }
       } catch (error) {
         console.log(error);

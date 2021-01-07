@@ -68,29 +68,31 @@ export const GlobalProvider = ({ children }) => {
 
   // Login - get user token
   async function loginUser(userData, history) {
-    await axios
-      .post("http://localhost:5001/users/login", userData)
-      .then((res) => {
-        // Save to localStorage
-        // Set token to localStorage
-        const { token } = res.data;
-        localStorage.setItem("jwtToken", token);
+    try {
+      await axios
+        .post("http://localhost:5001/users/login", userData)
+        .then((res) => {
+          // Save to localStorage
+          // Set token to localStorage
+          const { token } = res.data;
+          localStorage.setItem("jwtToken", token);
 
-        // Set token to Auth header
-        setAuthToken(token);
+          // Set token to Auth header
+          setAuthToken(token);
 
-        // Decode token to get user data
-        const decoded = jwt_decode(token);
-        // Set current user
-        setCurrentUser(decoded);
-        history.push("/");
-      })
-      .catch((err) =>
-        dispatch({
-          type: "GET_ERRORS",
-          payload: err.response.data,
-        })
-      );
+          // Decode token to get user data
+          const decoded = jwt_decode(token);
+          // Set current user
+          setCurrentUser(decoded);
+          resetErrMsgs();
+          history.push("/");
+        });
+    } catch (err) {
+      dispatch({
+        type: "GET_ERRORS",
+        payload: err.response.data,
+      });
+    }
   }
 
   // Set logged in user
