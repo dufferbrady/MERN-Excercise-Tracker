@@ -37,27 +37,60 @@ function Register() {
       password2,
     };
 
-    registerUser(newUser);
-    if (!errMsgs) {
-      setFirstName("");
-      setSurname("");
-      setEmail("");
-      setPassword1("");
-      setPassword2("");
-    }
+    registerUser(newUser).then((res) => {
+      try {
+        if (res.status === 200) {
+          setFirstName("");
+          setSurname("");
+          setEmail("");
+          setPassword1("");
+          setPassword2("");
+          setErrors(null);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
-    // showModal(false);
+  const validStyles = {
+    flexGrow: 1,
+    padding: "15px 20px",
+    boxSizing: "border-box",
+    margin: "15px 0px 5px 0",
+    borderRadius: "10px",
+    border: "1px solid #DDDFE2",
+    fontSize: "15px",
+  };
 
-    // addUser(newUser)
-    //   .then((data) => {
-    //     console.log(data);
-    //     setTimeout(() => registerUser(data.success), 2000);
-    //     startLoader(data.success);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // console.log(newUser);
+  const validStyles2 = {
+    width: "100%",
+    padding: "15px 20px",
+    boxSizing: "border-box",
+    margin: "15px 0 5px 0",
+    borderRadius: "10px",
+    border: "1px solid #DDDFE2",
+    fontSize: "15px",
+  };
+
+  const inValidStyles = {
+    flexGrow: 1,
+    padding: "15px 20px",
+    boxSizing: "border-box",
+    margin: "15px 0px 5px 0",
+    borderRadius: "10px",
+    border: "1px solid red",
+    fontSize: "15px",
+  };
+
+  const inValidStyles2 = {
+    width: "100%",
+    padding: "15px 20px",
+    boxSizing: "border-box",
+    margin: "15px 0px 5px 0",
+    borderRadius: "10px",
+    border: "1px solid red",
+    fontSize: "15px",
   };
 
   return (
@@ -74,7 +107,7 @@ function Register() {
             placeholder="First Name"
             value={firstName}
             change={(e) => setFirstName(e.target.value)}
-            className={classes.valid}
+            styles={!errMsgs.firstName ? validStyles : inValidStyles}
           />
         </div>
         <div>
@@ -84,15 +117,7 @@ function Register() {
             placeholder="Surname"
             value={surName}
             change={(e) => setSurname(e.target.value)}
-            styles={{
-              flexGrow: 1,
-              padding: "15px 20px",
-              boxSizing: "border-box",
-              margin: "15px 0 5px 10px",
-              borderRadius: "10px",
-              border: "1px solid #DDDFE2",
-              fontSize: "15px",
-            }}
+            styles={!errMsgs.surName ? validStyles : inValidStyles}
           />
         </div>
       </div>
@@ -103,16 +128,7 @@ function Register() {
           placeholder="Email address"
           value={email}
           change={(e) => setEmail(e.target.value)}
-          styles={{
-            width: "100%",
-            padding: "15px 20px",
-            boxSizing: "border-box",
-            margin: "15px 0 5px 0",
-            borderRadius: "10px",
-            border: "1px solid #DDDFE2",
-            fontSize: "15px",
-            flexGrow: 1,
-          }}
+          styles={!errMsgs.email ? validStyles2 : inValidStyles2}
         />
       </div>
       <span style={{ color: "red" }}>{errMsgs.password}</span>
@@ -121,15 +137,7 @@ function Register() {
         placeholder="Password"
         value={password1}
         change={(e) => setPassword1(e.target.value)}
-        styles={{
-          width: "100%",
-          padding: "15px 20px",
-          boxSizing: "border-box",
-          margin: "15px 0 5px 0",
-          borderRadius: "10px",
-          border: "1px solid #DDDFE2",
-          fontSize: "15px",
-        }}
+        styles={!errMsgs.password ? validStyles2 : inValidStyles2}
       />
       <span style={{ color: "red" }}>{errMsgs.password2}</span>
       <Input
@@ -137,15 +145,7 @@ function Register() {
         placeholder="Confirm Password"
         value={password2}
         change={(e) => setPassword2(e.target.value)}
-        styles={{
-          width: "100%",
-          padding: "15px 20px",
-          boxSizing: "border-box",
-          margin: "15px 0 5px 0",
-          borderRadius: "10px",
-          border: "1px solid #DDDFE2",
-          fontSize: "15px",
-        }}
+        styles={!errMsgs.password2 ? validStyles2 : inValidStyles2}
       />
       <Button
         text={"Signup"}

@@ -18,6 +18,11 @@ export default (state, action) => {
         ...state,
         errMsgs: action.payload,
       };
+    case "RESET_ERRORS":
+      return {
+        ...state,
+        errMsgs: {},
+      };
 
     //Old reducers
     case "SHOW_REGISTER_MODAL":

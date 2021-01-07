@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 import classes from "./login.module.css";
 import Input from "../UI/Input/Input";
@@ -8,20 +9,33 @@ import Register from "../Register/Register";
 
 import { GlobalContext } from "../../context/GlobalState";
 
-const Login = () => {
-  const {
-    registerModal,
-    showRegisterModal,
-    userRegisterVal,
-    showUserValModal,
-  } = useContext(GlobalContext);
+function Login() {
+  const { registerModal, showRegisterModal, loginUser } = useContext(
+    GlobalContext
+  );
+
+  let history = useHistory();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginUserHandle = (e) => {
+    e.preventDefault();
+    console.log("submitted");
+    let userData = {
+      email,
+      password,
+    };
+    loginUser(userData, history);
+  };
 
   const login = (
     <div className={classes.login_container}>
       <div className={classes.recent_logins}>Recent Logins</div>
       <div className={classes.login_form}>
-        <div className={classes.input_container}>
+        <form className={classes.input_container} onSubmit={loginUserHandle}>
           <Input
+            change={(e) => setEmail(e.target.value)}
             text="text"
             placeholder="Enter email address or username"
             styles={{
@@ -35,6 +49,7 @@ const Login = () => {
             }}
           />
           <Input
+            change={(e) => setPassword(e.target.value)}
             text="text"
             placeholder="Password"
             styles={{
@@ -48,6 +63,7 @@ const Login = () => {
             }}
           />
           <Button
+            clickFunction={loginUserHandle}
             text="Log In"
             styles={{
               width: "100%",
@@ -63,7 +79,7 @@ const Login = () => {
               fontWeight: "600",
             }}
           />
-        </div>
+        </form>
         <div className={classes.forgotten_account}>
           <span>Forgotten Account?</span>
         </div>
@@ -100,6 +116,6 @@ const Login = () => {
       </Modal> */}
     </>
   );
-};
+}
 
 export default Login;

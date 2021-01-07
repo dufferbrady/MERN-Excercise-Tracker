@@ -7,6 +7,11 @@ import axios from "axios";
 
 // Initial state
 const initialState = {
+  workouts: [
+    { name: "Workout A", date: "Tue, 25 Aug", _id: "1234" },
+    { name: "Workout B", date: "Thur, 27 Aug", _id: "1234" },
+    { name: "Workout A", date: "Sat, 29 Aug", _id: "1234" },
+  ],
   errMsgs: {},
   isAuthenticated: false,
   user: {},
@@ -22,15 +27,19 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  const setAuthToken = async (token) => {
+  function setAuthToken(token) {
     if (token) {
-      // Apply authorization token to every request if logged in
-      axios.defaults.headers.common["Authorization"] = token;
+      try {
+        // Apply authorization token to every request if logged in
+        axios.defaults.headers.common["Authorization"] = token;
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       // Delete auth header
       delete axios.defaults.headers.common["Authorization"];
     }
-  };
+  }
 
   // Register User
   async function registerUser(userData) {
@@ -40,12 +49,14 @@ export const GlobalProvider = ({ children }) => {
       },
     };
     try {
-      await axios.post(
+      let response = await axios.post(
         "http://localhost:5001/users/register",
         userData,
         config
       );
       showRegisterModal(false);
+      resetErrMsgs();
+      return response;
     } catch (err) {
       console.log("inside catch");
       dispatch({
@@ -55,25 +66,56 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  // Actions
-  async function addUser(newUser) {
-    console.log(newUser);
-    // const config = {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // };
-    // try {
-    //   let res = await axios.post(
-    //     "http://localhost:5001/users/register",
-    //     newUser,
-    //     config
-    //   );
-    //   let data = res.data;
-    //   return data;
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  // Login - get user token
+  async function loginUser(userData, history) {
+    await axios
+      .post("http://localhost:5001/users/login", userData)
+      .then((res) => {
+        // Save to localStorage
+        // Set token to localStorage
+        const { token } = res.data;
+        localStorage.setItem("jwtToken", token);
+
+        // Set token to Auth header
+        setAuthToken(token);
+
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // Set current user
+        setCurrentUser(decoded);
+        history.push("/");
+      })
+      .catch((err) =>
+        dispatch({
+          type: "GET_ERRORS",
+          payload: err.response.data,
+        })
+      );
+  }
+
+  // Set logged in user
+  function setCurrentUser(decoded) {
+    dispatch({
+      type: "SET_CURRENT_USER",
+      payload: decoded,
+    });
+  }
+
+  // User loading
+  function setUserLoading() {
+    return {
+      type: "USER_LOADING",
+    };
+  }
+
+  // Log user out
+  function logoutUser() {
+    // Remove token from local storage
+    localStorage.removeItem("jwtToken");
+    // Remove auth header for future requests
+    setAuthToken(false);
+    // Set current user to empty object {} which will set isAuthenticated to false
+    setCurrentUser({});
   }
 
   //Actions
@@ -92,25 +134,25 @@ export const GlobalProvider = ({ children }) => {
     });
   }
 
+  //Action
+  function resetErrMsgs() {
+    dispatch({
+      type: "RESET_ERRORS",
+    });
+  }
+
   //Actions
-  // function registerUser(val) {
+  // function startLoader(val) {
   //   dispatch({
-  //     type: "USER_VALIDATED",
+  //     type: "START_LOADER",
   //     payload: val,
   //   });
   // }
 
-  //Actions
-  function startLoader(val) {
-    dispatch({
-      type: "START_LOADER",
-      payload: val,
-    });
-  }
-
   return (
     <GlobalContext.Provider
       value={{
+        workouts: state.workouts,
         errMsgs: state.errMsgs,
         isAuthenticated: state.isAuthenticated,
         user: state.user,
@@ -120,8 +162,9 @@ export const GlobalProvider = ({ children }) => {
         showRegisterModal,
         showUserValModal,
         registerUser,
-        addUser,
-        startLoader,
+        loginUser,
+        logoutUser,
+        setUserLoading,
       }}
     >
       {children}
